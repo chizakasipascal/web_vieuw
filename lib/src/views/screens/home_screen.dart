@@ -20,8 +20,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: WebView(
-        // initialUrl: Links.link,
-        initialUrl: 'https://flutter.io',
+        initialUrl: Links.link,
+        javascriptMode: JavascriptMode.unrestricted,
       ),
     );
   }
