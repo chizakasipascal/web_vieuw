@@ -1,5 +1,4 @@
 class Strings {
   Strings._();
-
-  static const String appName = "MobileAppChat";
+  static const String appName = "Inoselsweb";
 }
