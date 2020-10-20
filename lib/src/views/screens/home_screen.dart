@@ -8,6 +8,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final webview = FlutterWebviewPlugin();
   @override
   Widget build(BuildContext context) {
     return WebviewScaffold(
@@ -18,6 +19,28 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text("Inosels"),
+        actions: [
+          Row(
+            children: [
+              IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                  ),
+                  onPressed: () {
+                    webview.goBack();
+                  }),
+              IconButton(
+                icon: Icon(
+                  Icons.refresh,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  webview.reload();
+                },
+              )
+            ],
+          ),
+        ],
       ),
       initialChild: Center(child: CircularProgressIndicator()),
     );
