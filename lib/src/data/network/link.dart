@@ -4,6 +4,6 @@ class Links {
 
   // static const String link = "www.inotel.be/";
   // static const String link = "https://flutter.dev/";
-  static const String link = "https://connectis.co/Login";
-  // static const String link = "https://google.com";
+  // static const String link = "https://connectis.co/Login";
+  static const String link = "https://google.com";
 }

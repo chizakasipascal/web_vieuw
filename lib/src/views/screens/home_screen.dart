@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:inoselsweb/src/data/network/link.dart';
@@ -12,7 +11,7 @@ class _WebViewInoselsState extends State<WebViewInosels> {
   InAppWebViewController _webViewController;
   String url = "";
   double progress = 0;
-
+  bool showErrorPage = false;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,38 +20,81 @@ class _WebViewInoselsState extends State<WebViewInosels> {
           child: Column(
             children: <Widget>[
               Container(
+                height: 20,
+                color: Colors.green,
                 child: progress < 1.0
                     ? LinearProgressIndicator(value: progress)
-                    : SizedBox.fromSize(),
+                    : SizedBox.shrink(),
               ),
               Expanded(
-                child: InAppWebView(
-                  initialUrl: Links.link,
-                  initialOptions: InAppWebViewGroupOptions(
-                    crossPlatform: InAppWebViewOptions(
-                      debuggingEnabled: true,
+                child: Stack(
+                  children: [
+                    InAppWebView(
+                      initialUrl: Links.link,
+                      initialOptions: InAppWebViewGroupOptions(
+                        crossPlatform: InAppWebViewOptions(
+                          debuggingEnabled: true,
+                        ),
+                      ),
+                      onWebViewCreated: (InAppWebViewController controller) {
+                        _webViewController = controller;
+                      },
+                      onLoadStart:
+                          (InAppWebViewController controller, String url) {
+                        setState(() {
+                          this.url = url;
+                        });
+                      },
+                      onLoadStop: (InAppWebViewController controller,
+                          String url) async {
+                        setState(() {
+                          this.url = url;
+                        });
+                      },
+                      onProgressChanged:
+                          (InAppWebViewController controller, int progress) {
+                        setState(() {
+                          this.progress = progress / 100;
+                        });
+                      },
+                      ////
+                      ///
+                      ///
+                      ///
+                      ///
+
+                      onLoadError: (InAppWebViewController controller,
+                          String url, int i, String s) async {
+                        print('CUSTOM_HANDLER: $i, $s');
+                        showError();
+                      },
+                      onLoadHttpError: (InAppWebViewController controller,
+                          String url, int i, String s) async {
+                        print('CUSTOM_HANDLER: $i, $s');
+                        showError();
+                      },
                     ),
-                  ),
-                  onWebViewCreated: (InAppWebViewController controller) {
-                    _webViewController = controller;
-                  },
-                  onLoadStart: (InAppWebViewController controller, String url) {
-                    setState(() {
-                      this.url = url;
-                    });
-                  },
-                  onLoadStop:
-                      (InAppWebViewController controller, String url) async {
-                    setState(() {
-                      this.url = url;
-                    });
-                  },
-                  onProgressChanged:
-                      (InAppWebViewController controller, int progress) {
-                    setState(() {
-                      this.progress = progress / 100;
-                    });
-                  },
+                    showErrorPage
+                        ? Center(
+                            child: Container(
+                              color: Colors.white,
+                              alignment: Alignment.center,
+                              height: double.infinity,
+                              width: double.infinity,
+                              child: Container(
+                                height: 200.0,
+                                width: 200.0,
+                                color: Colors.red,
+                                child: Center(
+                                  child: Text(
+                                    "Creer un widget encas d'erreur de chargemen de la page",
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : SizedBox(height: 0, width: 0),
+                  ],
                 ),
               ),
             ],
@@ -89,5 +131,17 @@ class _WebViewInoselsState extends State<WebViewInosels> {
         ),
       ),
     );
+  }
+
+  void showError() {
+    setState(() {
+      showErrorPage = true;
+    });
+  }
+
+  void hideError() {
+    setState(() {
+      showErrorPage = false;
+    });
   }
 }
