@@ -13,7 +13,7 @@ class Inoselsweb extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: Strings.appName,
-      home: HomeScreen(),
+      home: WebViewInosels(),
     );
   }
 }
