@@ -1,48 +1,93 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:inoselsweb/src/data/network/link.dart';
 
-class HomeScreen extends StatefulWidget {
+class WebViewInosels extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _WebViewInoselsState createState() => new _WebViewInoselsState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  final webview = FlutterWebviewPlugin();
+class _WebViewInoselsState extends State<WebViewInosels> {
+  InAppWebViewController _webViewController;
+  String url = "";
+  double progress = 0;
+
   @override
   Widget build(BuildContext context) {
-    return WebviewScaffold(
-      url: Links.link,
-      withJavascript: true,
-      withZoom: false,
-      hidden: true,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("Inosels"),
-        actions: [
-          Row(
-            children: [
-              IconButton(
-                  icon: Icon(
-                    Icons.arrow_back,
+    return MaterialApp(
+      home: Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: <Widget>[
+              Container(
+                child: progress < 1.0
+                    ? LinearProgressIndicator(value: progress)
+                    : SizedBox.fromSize(),
+              ),
+              Expanded(
+                child: InAppWebView(
+                  initialUrl: Links.link,
+                  initialOptions: InAppWebViewGroupOptions(
+                    crossPlatform: InAppWebViewOptions(
+                      debuggingEnabled: true,
+                    ),
                   ),
-                  onPressed: () {
-                    webview.goBack();
-                  }),
-              IconButton(
-                icon: Icon(
-                  Icons.refresh,
-                  color: Colors.white,
+                  onWebViewCreated: (InAppWebViewController controller) {
+                    _webViewController = controller;
+                  },
+                  onLoadStart: (InAppWebViewController controller, String url) {
+                    setState(() {
+                      this.url = url;
+                    });
+                  },
+                  onLoadStop:
+                      (InAppWebViewController controller, String url) async {
+                    setState(() {
+                      this.url = url;
+                    });
+                  },
+                  onProgressChanged:
+                      (InAppWebViewController controller, int progress) {
+                    setState(() {
+                      this.progress = progress / 100;
+                    });
+                  },
                 ),
-                onPressed: () {
-                  webview.reload();
-                },
-              )
+              ),
             ],
           ),
-        ],
+        ),
+        bottomNavigationBar: ButtonBar(
+          alignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            FlatButton(
+              child: Icon(Icons.arrow_back),
+              onPressed: () {
+                if (_webViewController != null) {
+                  _webViewController.goBack();
+                }
+              },
+            ),
+            FlatButton(
+              child: Icon(Icons.arrow_forward),
+              onPressed: () {
+                if (_webViewController != null) {
+                  _webViewController.goForward();
+                }
+              },
+            ),
+            FlatButton(
+              child: Icon(Icons.refresh),
+              onPressed: () {
+                if (_webViewController != null) {
+                  _webViewController.reload();
+                }
+              },
+            ),
+          ],
+        ),
       ),
-      initialChild: Center(child: CircularProgressIndicator()),
     );
   }
 }
