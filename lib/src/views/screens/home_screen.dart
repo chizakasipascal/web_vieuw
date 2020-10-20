@@ -21,7 +21,6 @@ class _WebViewInoselsState extends State<WebViewInosels> {
             children: <Widget>[
               Container(
                 height: 20,
-                color: Colors.green,
                 child: progress < 1.0
                     ? LinearProgressIndicator(value: progress)
                     : SizedBox.shrink(),
@@ -81,13 +80,28 @@ class _WebViewInoselsState extends State<WebViewInosels> {
                               alignment: Alignment.center,
                               height: double.infinity,
                               width: double.infinity,
-                              child: Container(
-                                height: 200.0,
-                                width: 200.0,
-                                color: Colors.red,
-                                child: Center(
-                                  child: Text(
-                                    "Creer un widget encas d'erreur de chargemen de la page",
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Material(
+                                  elevation: 2,
+                                  child: Container(
+                                    height: 200.0,
+                                    width: 200.0,
+                                    child: Center(
+                                      child: FlatButton(
+                                        onPressed: () {
+                                          _webViewController.reload();
+                                          if (showErrorPage) {
+                                            hideError();
+                                          } else {
+                                            showError();
+                                          }
+                                        },
+                                        child: Icon(
+                                          Icons.refresh,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
