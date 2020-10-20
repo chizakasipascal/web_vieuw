@@ -1,8 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:inoselsweb/src/data/network/link.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -11,18 +9,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
-  void initState() {
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: WebView(
-        initialUrl: Links.link,
-        javascriptMode: JavascriptMode.unrestricted,
+    return WebviewScaffold(
+      url: Links.link,
+      withJavascript: true,
+      withZoom: false,
+      hidden: true,
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("Inosels"),
       ),
+      initialChild: Center(child: CircularProgressIndicator()),
     );
   }
 }
