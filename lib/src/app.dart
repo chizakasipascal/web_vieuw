@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:inoselsweb/src/views/screens/home_screen.dart';
 
+import 'constants/app_theme.dart';
 import 'constants/strings.dart';
 
 class Inoselsweb extends StatelessWidget {
@@ -13,6 +14,7 @@ class Inoselsweb extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: Strings.appName,
+      theme: themeData,
       home: WebViewInosels(),
     );
   }

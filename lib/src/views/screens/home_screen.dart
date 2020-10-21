@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:inoselsweb/src/data/network/link.dart';
+import 'package:inoselsweb/src/views/widgets/naviation_refresh.dart';
+import 'package:inoselsweb/utils/colors.dart';
 
 class WebViewInosels extends StatefulWidget {
   @override
@@ -14,136 +16,111 @@ class _WebViewInoselsState extends State<WebViewInosels> {
   bool showErrorPage = false;
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: SafeArea(
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: 20,
-                child: progress < 1.0
-                    ? LinearProgressIndicator(value: progress)
-                    : SizedBox.shrink(),
-              ),
-              Expanded(
-                child: Stack(
-                  children: [
-                    InAppWebView(
-                      initialUrl: Links.link,
-                      initialOptions: InAppWebViewGroupOptions(
-                        crossPlatform: InAppWebViewOptions(
-                          debuggingEnabled: true,
-                        ),
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            Container(
+              child: progress < 1.0
+                  ? LinearProgressIndicator(
+                      value: progress,
+                      valueColor: AlwaysStoppedAnimation(Colors.red),
+                      minHeight: 1,
+                      backgroundColor: WhiteColor,
+                    )
+                  : SizedBox.shrink(),
+            ),
+            Expanded(
+              child: Stack(
+                children: [
+                  InAppWebView(
+                    initialUrl: Links.link,
+                    initialOptions: InAppWebViewGroupOptions(
+                      crossPlatform: InAppWebViewOptions(
+                        debuggingEnabled: true,
                       ),
-                      onWebViewCreated: (InAppWebViewController controller) {
-                        _webViewController = controller;
-                      },
-                      onLoadStart:
-                          (InAppWebViewController controller, String url) {
-                        setState(() {
-                          this.url = url;
-                        });
-                      },
-                      onLoadStop: (InAppWebViewController controller,
-                          String url) async {
-                        setState(() {
-                          this.url = url;
-                        });
-                      },
-                      onProgressChanged:
-                          (InAppWebViewController controller, int progress) {
-                        setState(() {
-                          this.progress = progress / 100;
-                        });
-                      },
-                      ////
-                      ///
-                      ///
-                      ///
-                      ///
-
-                      onLoadError: (InAppWebViewController controller,
-                          String url, int i, String s) async {
-                        print('CUSTOM_HANDLER: $i, $s');
-                        showError();
-                      },
-                      onLoadHttpError: (InAppWebViewController controller,
-                          String url, int i, String s) async {
-                        print('CUSTOM_HANDLER: $i, $s');
-                        showError();
-                      },
                     ),
-                    showErrorPage
-                        ? Center(
-                            child: Container(
-                              color: Colors.white,
-                              alignment: Alignment.center,
-                              height: double.infinity,
-                              width: double.infinity,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Material(
-                                  elevation: 2,
-                                  child: Container(
-                                    height: 200.0,
-                                    width: 200.0,
-                                    child: Center(
-                                      child: FlatButton(
-                                        onPressed: () {
-                                          _webViewController.reload();
-                                          if (showErrorPage) {
-                                            hideError();
-                                          } else {
-                                            showError();
-                                          }
-                                        },
-                                        child: Icon(
-                                          Icons.refresh,
-                                        ),
+                    onWebViewCreated: (InAppWebViewController controller) {
+                      _webViewController = controller;
+                    },
+                    onLoadStart:
+                        (InAppWebViewController controller, String url) {
+                      setState(() {
+                        this.url = url;
+                      });
+                    },
+                    onLoadStop:
+                        (InAppWebViewController controller, String url) async {
+                      setState(() {
+                        this.url = url;
+                      });
+                    },
+                    onProgressChanged:
+                        (InAppWebViewController controller, int progress) {
+                      setState(() {
+                        this.progress = progress / 100;
+                      });
+                    },
+                    ////
+                    ///
+                    ///
+                    ///
+                    ///
+
+                    onLoadError: (InAppWebViewController controller, String url,
+                        int i, String s) async {
+                      print('CUSTOM_HANDLER: $i, $s');
+                      showError();
+                    },
+                    onLoadHttpError: (InAppWebViewController controller,
+                        String url, int i, String s) async {
+                      print('CUSTOM_HANDLER: $i, $s');
+                      showError();
+                    },
+                  ),
+                  showErrorPage
+                      ? Center(
+                          child: Container(
+                            color: WhiteColor,
+                            alignment: Alignment.center,
+                            height: double.infinity,
+                            width: double.infinity,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Material(
+                                elevation: 2,
+                                child: Container(
+                                  height: 200.0,
+                                  width: 200.0,
+                                  child: Center(
+                                    child: FlatButton(
+                                      onPressed: () {
+                                        _webViewController.reload();
+                                        if (showErrorPage) {
+                                          hideError();
+                                        } else {
+                                          showError();
+                                        }
+                                      },
+                                      child: Icon(
+                                        Icons.refresh,
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          )
-                        : SizedBox(height: 0, width: 0),
-                  ],
-                ),
+                          ),
+                        )
+                      : SizedBox(height: 0, width: 0),
+                ],
               ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: ButtonBar(
-          alignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            FlatButton(
-              child: Icon(Icons.arrow_back),
-              onPressed: () {
-                if (_webViewController != null) {
-                  _webViewController.goBack();
-                }
-              },
-            ),
-            FlatButton(
-              child: Icon(Icons.arrow_forward),
-              onPressed: () {
-                if (_webViewController != null) {
-                  _webViewController.goForward();
-                }
-              },
-            ),
-            FlatButton(
-              child: Icon(Icons.refresh),
-              onPressed: () {
-                if (_webViewController != null) {
-                  _webViewController.reload();
-                }
-              },
             ),
           ],
         ),
       ),
+      bottomNavigationBar:
+          MenuNavigationRefresh(webViewController: _webViewController),
     );
   }
 
