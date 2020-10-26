@@ -37,8 +37,9 @@ class _WebViewInoselsState extends State<WebViewInosels> {
                     initialUrl: Links.link,
                     initialOptions: InAppWebViewGroupOptions(
                       crossPlatform: InAppWebViewOptions(
-                        debuggingEnabled: true,
-                      ),
+                          debuggingEnabled: true,
+                          supportZoom: false,
+                          disableHorizontalScroll: true),
                     ),
                     onWebViewCreated: (InAppWebViewController controller) {
                       _webViewController = controller;
