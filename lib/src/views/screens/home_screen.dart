@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:inoselsweb/src/data/network/link.dart';
@@ -13,7 +11,7 @@ class WebViewInosels extends StatefulWidget {
 
 class _WebViewInoselsState extends State<WebViewInosels> {
   InAppWebViewController _webViewController;
-  String url = "";
+  String url = Links.link;
   double progress = 0;
   bool showErrorPage = false;
   @override
