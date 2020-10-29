@@ -1,5 +1,5 @@
 class Links {
   Links._();
   // links
-  static const String link = "https://dribbble.com/";
+  static const String link = "https://google.com/";
 }
