@@ -35,15 +35,17 @@ class _WebViewInoselsState extends State<WebViewInosels> {
                 children: [
                   InAppWebView(
                     initialUrl: Links.link,
+                    onWebViewCreated: (InAppWebViewController controler) {
+                      _webViewController = controler;
+                    },
                     initialOptions: InAppWebViewGroupOptions(
+                      android:
+                          AndroidInAppWebViewOptions(blockNetworkLoads: true),
                       crossPlatform: InAppWebViewOptions(
                           debuggingEnabled: true,
                           supportZoom: false,
                           disableHorizontalScroll: true),
                     ),
-                    onWebViewCreated: (InAppWebViewController controller) {
-                      _webViewController = controller;
-                    },
                     onLoadStart:
                         (InAppWebViewController controller, String url) {
                       setState(() {
@@ -62,12 +64,6 @@ class _WebViewInoselsState extends State<WebViewInosels> {
                         this.progress = progress / 100;
                       });
                     },
-                    ////
-                    ///
-                    ///
-                    ///
-                    ///
-
                     onLoadError: (InAppWebViewController controller, String url,
                         int i, String s) async {
                       print('CUSTOM_HANDLER: $i, $s');
